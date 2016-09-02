@@ -1,0 +1,11 @@
+extends layout
+
+block styles
+
+block content
+  #map(style='width:500px;height:400px;')
+
+
+block scripts
+  script(type='text/javascript', src='//apis.daum.net/maps/maps3.js?apikey=b19b3ab296acfbac13e9f1f2cd2ab969')
+  script(src='/javascripts/daum_map.js')
