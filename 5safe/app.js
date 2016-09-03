@@ -56,5 +56,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
+app.listen(3000,function(){
+  console.log('Connected 3000 port');
+});
 
 module.exports = app;
