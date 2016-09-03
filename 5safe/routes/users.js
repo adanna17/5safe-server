@@ -55,8 +55,8 @@ router.post('/register',function(req,res){
 
   var user = {
     user_kakao_id : req.body.user_kakao_id,
-    latitude : req.body.latitude,
-    longitude : req.body.longitude
+    // latitude : req.body.latitude,
+    // longitude : req.body.longitude
   };
 
   var sql = 'INSERT INTO user SET ?';
@@ -72,11 +72,13 @@ router.post('/register',function(req,res){
 });
 //회원가입
 
+router.post('/')
+
 router.post('/device', function(req, res){
 
-    var device = [req.body.device_model, req.body.user_id];
+    var device = [req.body.device_model, req.body.user_kakao_id];
 
-    var sql = 'UPDATE user set device_model=? WHERE user_id=?';
+    var sql = 'UPDATE user set device_model=? WHERE user_kakao_id=?';
     db.query(sql, device, function(err, result){
       if (err) {
         res.status(500);
@@ -89,11 +91,11 @@ router.post('/device', function(req, res){
 
 router.post('/location',function(req, res){
 
-  var location = [req.body.latitude,req.body.longitude,req.body.user_id];
+  var location = [req.body.latitude,req.body.longitude,req.body.user_kakao_id];
   // var checkUser = req.body.user_kakao_id;
 
   // var sql = 'SELECT user_kakao_id FROM user WHERE user_kakao_id = ?';
-  var sql = 'UPDATE user set latitude=?, longitude=? where user_id=?';
+  var sql = 'UPDATE user set latitude=?, longitude=? where user_kakao_id=?';
 
   db.query(sql, location, function(err, result){
     if(err){
