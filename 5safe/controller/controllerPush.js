@@ -42,13 +42,12 @@ controllerPush.prototype.sendPushMessageFromFcm = function(pushList){
 }
 
 //기기 목록(pushList)에 gcm으로 푸쉬 보내기
-controllerPush.prototype.sendPushMessageFromGcm = function(pushList){
+controllerPush.prototype.sendPushMessageFromGcm = function(device_token){
 
     var message = new gcm.Message();
     message.addData('title', '푸쉬 노티 메시지 제목');
     message.addData('message', '푸쉬 노티 메시지 내용');
 
-    pushList.forEach(function(device_token){
         gcm_sender.send(message, device_token, function(err, result){
             if(err){
                 console.error('Error: ', err);
@@ -56,7 +55,6 @@ controllerPush.prototype.sendPushMessageFromGcm = function(pushList){
                 console.log('Success: ', result);
             }
         });
-    });
 };
 
 module.exports = controllerPush;

@@ -7,13 +7,16 @@ var db = require('../util/db.js');
 router.get('/', function(req, res, next) {
 
     var sql = 'SELECT device_model FROM user';
-    db.query(sql, function(err, result){
+    db.query(sql, function(err, results){
         if(err){
             res.status(500);
         }else{
-            console.log(result);
             var push = new controllerPush();
-            push.sendPushMessageFromGcm(result);
+            console.log('db query result ', results);
+            results.forEach(function(result){
+                console.log('device_token ', result.device_model);
+                push.sendPushMessageFromGcm(result.device_model);
+            });
         }
     })
   res.render('index', { title: 'Express' });
