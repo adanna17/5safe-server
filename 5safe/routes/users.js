@@ -123,6 +123,7 @@ router.post('/location',function(req, res){
     }
     res.json(ServerBoolResult);
   });
-});
+
+
 
 module.exports = router;
