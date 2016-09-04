@@ -39,15 +39,30 @@ router.post('/login',function(req,res){
       //오류 발생
     } else {
       if (result[0] == null) {
-        ServerBoolResult.bResult = false;
+
+        var user = {
+          user_kakao_id : req.body.user_kakao_id,
+          // latitude : req.body.latitude,
+          // longitude : req.body.longitude
+        };
+
+        var sql = 'INSERT INTO user SET ?';
+        db.query(sql, user, function(err, result){
+          if (err) {
+            res.status(500);
+            //오류 발생
+          } else {
+            ServerBoolResult.bResult = true;
+          }
         // 신규 사용자일 경우
+      });
       }else{
-        ServerBoolResult.bResult = true;
+        ServerBoolResult.bResult = false;
         // 기존 사용자일 경우
       }
-    }
-    res.json(ServerBoolResult);
-  });
+      res.json(ServerBoolResult);
+  }
+});
 });
 //기존 사용자인지 신규 가입자인지 확인
 
@@ -76,7 +91,7 @@ router.post('/')
 
 router.post('/device', function(req, res){
 
-    var device = [req.body.device_model, req.body.user_kakao_id];
+    var device = [req.body.device_id, req.body.user_kakao_id];
 
     var sql = 'UPDATE user set device_model=? WHERE user_kakao_id=?';
     db.query(sql, device, function(err, result){
