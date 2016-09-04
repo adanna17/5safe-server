@@ -5,7 +5,7 @@ var controllerPush = require('../controller/controllerPush');
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var push = new controllerPush();
-    push.sendPushMessage(new Array('aaa', 'bbb', 'ccc'));
+    push.sendPushMessageFromGcm(new Array('aaa', 'bbb', 'ccc'));
   res.render('index', { title: 'Express' });
 
 });

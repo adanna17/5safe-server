@@ -13,6 +13,7 @@
     "fcm-push": "^1.0.7",
     "jade": "~1.11.0",
     "morgan": "~1.7.0",
+    "node-gcm": "^0.14.4",
     "serve-favicon": "~2.3.0"
   }
 }
