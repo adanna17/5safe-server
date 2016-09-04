@@ -4,7 +4,7 @@ block styles
   link(rel='stylesheet', href='/stylesheets/daum-search.css')
 
 block content
-  body
+  body(onload='initTmap()')
     nav.navbar.navbar-fixed-top
       .container
         .navbar-header
@@ -14,7 +14,7 @@ block content
     .container-fluid
       .row
         .col-sm-9
-          #map(style='width:915px;height:568px;')
+          #map_div
         .col-sm-3
           #menu_wrap
             form
@@ -28,5 +28,6 @@ block content
               #pagination
 
 block scripts
+  script(language='javascript', src='https://apis.skplanetx.com/tmap/js?version=1&format=javascript&appKey=2edff32f-e7c8-3d80-9021-91f2f1f418ea')
   script(type='text/javascript', src='//apis.daum.net/maps/maps3.js?apikey=b19b3ab296acfbac13e9f1f2cd2ab969&libraries=services')
   script(src='/javascripts/duam-search.js')

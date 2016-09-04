@@ -1,12 +1,32 @@
+//
+//
+// var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+//     mapOption = {
+//         center: new daum.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+//         level: 3 // 지도의 확대 레벨
+//     };
+//
+// // 지도를 생성합니다
+// var map = new daum.maps.Map(mapContainer, mapOption);
 
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-    mapOption = {
-        center: new daum.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };
+var startPoint = {
+  lon: 14100731.301253,
+  lat: 4501804.430343
+}
 
-// 지도를 생성합니다
-var map = new daum.maps.Map(mapContainer, mapOption);
+//초기화 함수
+function initTmap(){
+
+    map = new Tmap.Map({div:'map_div',
+                        width:'100%',
+                        height:'570px',
+                        transitionEffect:"resize",
+                        animation:true
+                    });
+
+    map.setCenter(new Tmap.LonLat(startPoint.lon, startPoint.lat));
+    map.zoomTo(16);
+};
 
 // 장소 검색 객체를 생성합니다
 var ps = new daum.maps.services.Places();
@@ -18,7 +38,6 @@ searchPlaces();
 function searchPlaces() {
 
 
-
     var keyword = document.getElementById('keyword').value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
@@ -27,7 +46,7 @@ function searchPlaces() {
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-    ps.keywordSearch( keyword, placesSearchCB);
+    ps.keywordSearch(keyword, placesSearchCB);
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -73,7 +92,7 @@ function displayPlaces(places) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
-        bounds.extend(placePosition);
+        //bounds.extend(placePosition);
         fragment.appendChild(itemEl);
     }
 
@@ -82,7 +101,7 @@ function displayPlaces(places) {
     menuEl.scrollTop = 0;
 
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-    map.setBounds(bounds);
+    //map.setBounds(bounds);
 }
 
 // 검색결과 항목을 Element로 반환하는 함수입니다
@@ -110,7 +129,10 @@ function getListItem(index, places) {
         var marker = new daum.maps.Marker({
             position: selectedPosition
         });
-        marker.setMap(map);
+
+        //marker.setMap(map);
+
+        transPoint(places.longitude,places.latitude)
 
     };
 
@@ -123,6 +145,45 @@ function removeAllChildNods(el) {
     }
 }
 
+function transPoint(lon,lat){
+  var epsg3857 = new Tmap.Projection("EPSG:3857");
+  var wgs84 = new Tmap.Projection("EPSG:4326");
+  var transResult = new Tmap.LonLat(lon, lat).transform(wgs84, epsg3857);
+
+  console.log(transResult);
+
+  searchRoute(transResult.lon,transResult.lat)
+}
+
+//경로 정보 로드
+function searchRoute(lon,lat){
+    var routeFormat = new Tmap.Format.KML({extractStyles:true, extractAttributes:true});
+    var startX = startPoint.lon;
+    var startY = startPoint.lat;
+    var endX = lon;
+    var endY = lat;
+    var urlStr = "https://apis.skplanetx.com/tmap/routes?version=1&format=xml";
+    urlStr += "&startX="+startX;
+    urlStr += "&startY="+startY;
+    urlStr += "&endX="+endX;
+    urlStr += "&endY="+endY;
+    urlStr += "&appKey=2edff32f-e7c8-3d80-9021-91f2f1f418ea";
+    var prtcl = new Tmap.Protocol.HTTP({
+                                        url: urlStr,
+                                        format:routeFormat
+                                        });
+
+    var routeLayer = new Tmap.Layer.Vector("route", {protocol:prtcl, strategies:[new Tmap.Strategy.Fixed()]});
+    routeLayer.events.register("featuresadded", routeLayer, onDrawnFeatures);
+    map.addLayer(routeLayer);
+
+    console.log(prtcl.type);
+
+}
+//경로 그리기 후 해당영역으로 줌
+function onDrawnFeatures(e){
+    map.zoomToExtent(this.getDataExtent());
+}
 
 // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
 function displayPagination(pagination) {
