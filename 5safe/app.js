@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var map = require('./routes/map');
-var car = require('./routes/car');
+var users = require('./routes/users');
 
 var app = express();
 
@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/map', map);
-app.use('/car', car);
+app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -58,8 +58,5 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(3000,function(){
-  console.log('Connected 3000 port');
-});
 
 module.exports = app;
